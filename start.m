@@ -87,18 +87,25 @@ function newData(~,~)
         ,datestr(d(1),'yyyy-mm-dd HH:MM:SS'),d(2:end));
 
     if(isempty(p))
-        figure(1);
+        %Grab screen size so we know how big to make the figures
+        screenSize = get(0,'screensize');
+        screenW = screenSize(3);
+        screenH = screenSize(4);
+        
+        %This is the lake shape and map figure
+        p.mapF = figure('units','pixels','outerposition',[1 0.5*screenH screenW 0.5*screenH]);
         plot(c.shape(:,2),c.shape(:,1),'k');
         hold on;
         p.route = plot(c.data(:,3),c.data(:,2),'b','linewidth',3);
         hold off;
 
-        figure(2);
+        p.data1F = figure('units','pixels','outerposition',[1 1 0.5*screenW 0.5*screenH]);
         p.fluoro = plot(c.data(:,1),c.data(:,11),'b');
         title('Phyco');
 
 
-        figure(3);
+        p.data2F = figure('units','pixels'); %Wait to set screen position, some bug screws it up if here
+        set(p.data2F,'outerposition',[0.5*screenW 1 0.5*screenW 0.5*screenH]);
         p.wtrDo = plot(c.data(:,1),c.data(:,5),'r',c.data(:,1),c.data(:,13),'g');
         title('DOsat');
 
