@@ -62,15 +62,16 @@ classdef HydrolabSonde < handle
     methods(Access=private)
         function handleNewBytes(obj)
             tmp = fscanf(obj.comport);
+            disp('newData');
             
-            vals = regexp(tmp,'(?<time>\d+)\s+(?<wtr>\d+\.\d+)\s+(?<dosat>\d+\.\d+)\s+(?<doobs>\d+\.\d+)\s+(?<volts>\d+\.\d+)\s+(?<phyco>\d+\.\d+)\s+(?<chloro>\d+\.\d+)\s+(?<cond>\d+\.\d+)\s+','names');
+            vals = regexp(tmp,'(?<time>\d+)\s+(?<wtr>\d+\.\d+)\s+(?<dosat>\d+\.\d+)\s+(?<doobs>\d+\.\d+)\s+(?<volts>\d+\.\d+)\s+(?<phyco>\d+\.\d+)\s+(?<chloro>\d+\.\d+)\s+(?<cond>\d+\.?\d*)','names');
             
             %vals = regexp(tmp,[char(27) '[\d+?;10H (?<wtr>\d+\.\d+) \s*' char(27) '[\d+?;17H\s*(?<dosat>\d*?\.\d*)\s*' char(27) '[\d+?;25H\s*(?<doobs>\d*?\.\d*)\s*' char(27) '[\d+?;33H\s*(?<volts>\d*?\.\d*)\s*' char(27) '[\d+?;40H\s*(?<phyco>\d*?\.\d*)\s*' char(27) '[\d+?;49H\s*(?<chloro>\d*?\.\d*)\s*' char(27) '[\d+?;58H\s*(?<cond>\d*?\.\d*)'],'names');
             
             if(isempty(vals)) %If response, didn't contain droids we're looking for
+                disp(tmp);
                 return;
             end
-            
             
             %If we're here, found the droids we're looking for
             obj.temp = str2double(vals.wtr);
